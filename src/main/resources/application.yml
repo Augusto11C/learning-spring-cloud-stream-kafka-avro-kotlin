@@ -3,7 +3,7 @@ spring:
   cloud:
     stream:
       function:
-        definition: notificationConsumer
+        definition: notificationConsumer;notificationConsumerDLQ
 #      default:
 #        producer:
 #          use-native-encoding: true
@@ -15,22 +15,29 @@ spring:
         notificationConsumer-in-0:
           group: notification-api
           destination: notification-topic-v1
+          consumer:
+#           TODO Backoff FixedBackOff{interval=0, currentAttempts=10, maxAttempts=9} exhausted for
+            max-attempts: 3
 #          contentType: application/json
+#        notificationConsumerDLQ-in-0:
+#          group: notification-api
+#          destination: notification-dlq-v1
 #      [AUG] * Kafka config
 #      [AUG] https://docs.spring.io/spring-cloud-stream-binder-kafka/docs/3.0.10.RELEASE/reference/html/spring-cloud-stream-binder-kafka.html#_reference_guide
       kafka:
         bindings:
           notificationConsumer-in-0:
             consumer:
+              autoCommitOnError: true
 #              retryable-exceptions:
 #                aug.bueno.plane.infra.stream.NoFlightFoundException: false
-              enableDlq: true
-              dlqName: notification-dlq-v1
+#              enableDlq: true
+#              dlqName: notification-dlq-v1
 #        [AUG] * kafka * This section contains the configuration options used by the Apache Kafka binder.
         binder:
           brokers: 'localhost:9092'
 #          Effective only if autoCreateTopics or autoAddPartitions
-          min-partition-count: 2
+          min-partition-count: 1
           replication-factor: 1
           auto-create-topics: true
 #     [AUG] * Binder Configuration Properties
