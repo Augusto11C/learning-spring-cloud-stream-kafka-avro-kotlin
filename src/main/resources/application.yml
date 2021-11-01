@@ -9,11 +9,15 @@ spring:
 #          use-native-encoding: true
 #        consumer:
 #          use-native-encoding: true
+#     [AUG] * Spring-cloud-stream
+#     [AUG] https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#_binder_configuration_properties
       bindings:
         notificationConsumer-in-0:
           group: notification-api
           destination: notification-topic-v1
 #          contentType: application/json
+#      [AUG] * Kafka config
+#      [AUG] https://docs.spring.io/spring-cloud-stream-binder-kafka/docs/3.0.10.RELEASE/reference/html/spring-cloud-stream-binder-kafka.html#_reference_guide
       kafka:
         bindings:
           notificationConsumer-in-0:
@@ -22,15 +26,23 @@ spring:
 #                aug.bueno.plane.infra.stream.NoFlightFoundException: false
               enableDlq: true
               dlqName: notification-dlq-v1
+#        [AUG] * kafka * This section contains the configuration options used by the Apache Kafka binder.
         binder:
           brokers: 'localhost:9092'
+#          Effective only if autoCreateTopics or autoAddPartitions
           min-partition-count: 2
           replication-factor: 1
           auto-create-topics: true
+#     [AUG] * Binder Configuration Properties
       binders:
         kafka-learning:
+#          [AUG] By default, it has the same value as the configuration name.
           type: kafka
           environment:
+#            # Configs do Spring Kafka
+#            # ver application-cloud.yaml
+#            # https://www.confluent.io/blog/schema-registry-avro-in-spring-boot-application-tutorial/
+#            # para se achar, busque por 'schema.registry.url
             spring:
               kafka:
                 properties:
