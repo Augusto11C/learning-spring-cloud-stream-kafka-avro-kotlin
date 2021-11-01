@@ -1,42 +1,34 @@
 spring:
-  data:
-    mongodb:
-      host: api-database
   kafka.consumer.properties.spring.json.trusted.packages: '*'
   cloud:
     stream:
       function:
-        definition: planeEventProcessor;flightEventConsumer
-      default:
-        producer:
-          use-native-encoding: true
-        consumer:
-          use-native-encoding: true
+        definition: notificationConsumer
+#      default:
+#        producer:
+#          use-native-encoding: true
+#        consumer:
+#          use-native-encoding: true
+      bindings:
+        notificationConsumer-in-0:
+          group: notification-api
+          destination: notification-topic-v1
+#          contentType: application/json
       kafka:
         bindings:
-          planeEventProcessor-in-0:
-            destination: plane-events-v1
-            group: flight-api
+          notificationConsumer-in-0:
             consumer:
-              retryable-exceptions:
-                aug.bueno.plane.infra.stream.NoFlightFoundException: false
+#              retryable-exceptions:
+#                aug.bueno.plane.infra.stream.NoFlightFoundException: false
               enableDlq: true
-              dlqName: plane-events-dlq-v1
-          flightEventConsumer-in-0:
-            destination: flight-events-v1
-            group: flight-api
-            consumer:
-              enableDlq: true
-              dlqName: flight-events-dlq-v1
-          flightArrived-out-0:
-            destination: flight-arrived-v1
+              dlqName: notification-dlq-v1
         binder:
           brokers: 'localhost:9092'
           min-partition-count: 2
           replication-factor: 1
           auto-create-topics: true
       binders:
-        kafka-aug:
+        kafka-learning:
           type: kafka
           environment:
             spring:

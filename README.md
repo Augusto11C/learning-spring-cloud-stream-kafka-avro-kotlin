@@ -24,6 +24,17 @@ curl --location --request POST 'http://localhost:8080/users' \
 }'
 ```
 
+
+```shell
+curl --location --request POST 'http://localhost:8080/notification' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "to": "Teste",
+    "from": "Augusto",
+    "msg": "Hi"
+}'
+```
+
 Listar schemas criados no schema-registry: 
 ```shell
 curl --location --request GET 'http://localhost:8081/subjects'
