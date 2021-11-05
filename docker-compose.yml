@@ -1,11 +1,20 @@
 version: '3'
 services:
-#  api-database:
-#    image: mongo:3.2.4
-#    container_name: "api-database"
-#    ports:
-#      - 27017:27017
-#    command: --smallfiles
+  api-database:
+    image: mongo:4.4
+    container_name: "api-database"
+    hostname: mongo
+    restart: unless-stopped
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_DATABASE=notification
+      - MONGO_DB_USERNAME=user1
+      - MONGO_DB_PASSWORD=user1
+    volumes:
+      - "${MONGO_DATA_HOST_PATH:-/tmp/mongo/data/db}:/data/db/"
   zookeeper:
     image: confluentinc/cp-zookeeper:6.2.1
     hostname: zookeeper
